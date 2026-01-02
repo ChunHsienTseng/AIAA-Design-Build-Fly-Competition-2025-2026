@@ -7,7 +7,7 @@ RC aircraft system engineering with rule-based trade studies, build, and validat
 - See `02_geometry_constraints/` and `03_propulsion_trade_study/` for completed analyses
 - Ongoing electrical design work is documented in `04_electrical_system/`
 
-
+---
 
 ## Project Overview
 This repository documents the system-level design, build, and test activities for an AIAA Design, Build, Fly (DBF) competition aircraft.  
@@ -64,18 +64,17 @@ A high-level system block diagram and interface definitions are provided in the 
 
 This repository will be updated continuously as the aircraft progresses through manufacturing, integration, and test validation phases.
 
-
 ---
 
 ## Repository Structure
 
-00_project_overview/ – Requirements, constraints, and workflow
-01_system_architecture/ – Block diagrams, interfaces, and risks
-02_geometry_constraints/ – Prop clearance and landing gear analysis
-03_propulsion_trade_study/ – Prop, motor, and battery trade studies
-04_electrical_system/ – Power architecture and protection design
-05_manufacturing_assembly/ – Build process and quality checks
-06_test_and_validation/ – Bench and flight test planning/results
+- `00_project_overview/` – Requirements, constraints, and workflow  
+- `01_system_architecture/` – Block diagrams, interfaces, and risks  
+- `02_geometry_constraints/` – Prop clearance and landing gear analysis  
+- `03_propulsion_trade_study/` – Prop, motor, and battery trade studies  
+- `04_electrical_system/` – Power architecture and protection design  
+- `05_manufacturing_assembly/` – Build process and quality checks  
+- `06_test_and_validation/` – Bench and flight test planning/results  
 
 ---
 

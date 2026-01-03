@@ -2,7 +2,7 @@
 
 ## Purpose
 This document defines the **electrical wiring architecture and design principles**
-for the aircraft at the conceptual stage.
+for the aircraft at the conceptual design stage.
 
 The objective is to:
 - Establish clear separation between propulsion and avionics power paths
@@ -10,9 +10,9 @@ The objective is to:
 - Identify electrical noise and reliability risks early
 - Provide a stable framework for detailed wiring and protection design
 
-This document intentionally avoids final wire gauges, connector part numbers,
-and harness layouts, which will be finalized after component procurement and
-bench testing.
+This document reflects the current system architecture, where propulsion arming
+is implemented via a **removable XT90S anti-spark arming plug**, rather than a
+dedicated power switch.
 
 ---
 
@@ -22,34 +22,52 @@ The electrical system consists of **two fully independent wiring architectures**
 
 1. **Propulsion Power Wiring**
    - High-current, high-noise power delivery
-   - Short-duration peak loads up to DBF limits
+   - Physical arming/disarming via XT90S arming plug
 
 2. **Avionics / Control Wiring**
-   - Low-voltage, safety-critical control power
-   - Must remain operational regardless of propulsion system state
+   - Independent receiver battery
+   - Safety-critical low-voltage control power
 
 This separation is mandatory for DBF compliance and system reliability.
 
 (Reference system block diagram:
-`01_system_architecture/figures/system_block_diagram.jpg`)
+`01_system_architecture/figures/system_block_diagram.png`)
 
 ---
 
 ## Propulsion Power Wiring Architecture
 
 ### Power Path
-Propulsion battery → Arming/Safety Device → Main Fuse → ESC → Motor
+Propulsion battery → Main fuse → **XT90S arming plug (removable)** → ESC → Motor
 
 ### Key Characteristics
-- High current (up to 100 A peak)
-- Rapid current transients
+- High current (up to DBF limit)
+- Rapid current transients during throttle changes
 - Significant electromagnetic interference (EMI) potential
 
 ### Design Principles
 - Minimize total wire length in the high-current loop
-- Use direct, point-to-point routing with minimal splices
-- Avoid routing propulsion power wiring near avionics signal wiring
-- Ensure mechanical strain relief at battery, switch, and ESC connections
+- Use fixed, strain-relieved wiring for all non-removable connections
+- Concentrate routine connect/disconnect actions at the XT90S arming plug
+- Physically separate propulsion wiring from avionics wiring
+
+---
+
+## XT90S Arming Plug Implementation
+
+### Function
+The XT90S arming plug serves as the **primary propulsion arming and disarming
+mechanism**.
+
+- **Plug inserted:** propulsion system armed; motor can rotate
+- **Plug removed:** propulsion system disarmed; motor physically cannot rotate
+
+### Design Intent
+- The XT90S arming plug is externally accessible
+- Anti-spark feature reduces connector wear and inrush current stress
+- Plug removal provides a clear, visible safety state during ground handling
+
+The arming plug replaces the need for a dedicated propulsion power switch.
 
 ---
 
@@ -57,29 +75,28 @@ Propulsion battery → Arming/Safety Device → Main Fuse → ESC → Motor
 ### (Separate Receiver Battery – DBF Compliant)
 
 ### Power Path
-Receiver battery → Receiver switch → Receiver → Servos
+Receiver battery → Receiver power switch → Receiver → Servos
 
 ### Key Characteristics
 - Low voltage (≈5–6 V)
-- Lower average current but high transient stall currents
+- Lower average current but high transient servo stall currents
 - Safety-critical; brownout is unacceptable
 
 ### Design Principles
-- Independent wiring from propulsion system
+- Fully independent from propulsion power wiring
 - Short, low-resistance paths from receiver battery to receiver
-- Star-style power distribution from receiver to servos where possible
-- Avoid daisy-chaining high-load servos through thin traces or long leads
+- Avoid daisy-chaining high-load servos through thin or extended leads
 
 ---
 
 ## Control Signal Wiring
 
 ### Receiver → ESC
-- PWM throttle signal only (no power transfer)
+- PWM throttle signal only
+- No power transfer from ESC to receiver
 - ESC internal BEC is disabled and not used
-- Signal ground referenced only to receiver battery system
 
-### Design Principles
+### Routing Principles
 - Route control signal wiring away from high-current propulsion wiring
 - Cross high-current wires at approximately 90° if unavoidable
 - Avoid long parallel runs with motor phase wires
@@ -91,82 +108,56 @@ Receiver battery → Receiver switch → Receiver → Servos
 ### Philosophy
 - No shared power return between propulsion and avionics systems
 - Each system maintains its own closed current loop
-- Signal grounds are kept local to their respective power systems
+- Signal grounds remain local to their respective power systems
 
-### Rationale
-This minimizes:
-- Ground bounce
-- Noise coupling into control signals
-- Risk of receiver reset during high-power operation
+This minimizes ground bounce and EMI coupling into control signals.
 
 ---
 
 ## EMI and Noise Mitigation
 
-Potential noise sources:
-- ESC switching
-- Motor phase currents
-- High dI/dt during throttle changes
-
-Mitigation strategies:
-- Keep ESC-to-motor phase wires as short as practical
-- Twist motor phase wires when possible
-- Maintain physical separation between power and signal wiring
-- Add ferrite beads to servo leads if bench testing indicates noise sensitivity
+Mitigation strategies include:
+- Short ESC-to-motor phase wiring
+- Physical separation between power and signal wiring
+- Twisting motor phase wires when possible
+- Optional ferrite beads on servo leads if bench testing indicates sensitivity
 
 ---
 
 ## Connector and Interface Standardization (Preliminary)
 
-At the architectural level:
-- High-current connectors should be rated comfortably above expected continuous current
-- Control connectors should prioritize retention and vibration resistance
-- All connectors should be keyed or polarized to prevent misconnection
+- High-current connectors rated with thermal margin above expected load
+- XT90S connectors used for propulsion arming interface
+- Control connectors selected for vibration resistance and retention
 
-Specific connector types and wire gauges are **TBD** pending component selection
+Specific connector part numbers and wire gauges remain **TBD** pending procurement
 and bench test results.
 
 ---
 
 ## Assembly and Inspection Considerations
 
-- Wiring routes must be visible and inspectable
-- Chafing protection required where wires pass near structure
-- Clear labeling of propulsion vs avionics wiring
-- Receiver battery wiring must remain accessible for inspection and servicing
+- XT90S arming plug must be clearly visible and accessible
+- Propulsion and avionics wiring must be visually distinguishable
+- Chafing protection required at all structure pass-through points
+- Wiring routes must be inspectable without disassembly
 
 ---
 
-## TBD Items (To Be Finalized)
-The following items will be finalized after procurement and testing:
-
-- Wire gauge selection for propulsion and avionics wiring
-- Connector part numbers and ratings
-- Final routing paths and harness lengths
-- Fuse rating and placement details
-- Strain relief and mounting hardware
-
----
-
-## Relation to Downstream Design
-This wiring architecture provides inputs to:
-- Electrical protection and fusing design
-- Detailed harness drawings
-- Manufacturing and assembly procedures
-- Ground and flight test validation
-
-Subsequent documents:
-- `04_electrical_system/protection_and_fusing.md`
-- `06_test_and_validation/bench_test_plan.md`
+## TBD Items
+- Final wire gauge selection
+- Connector part numbers
+- Harness lengths and routing details
+- Fuse rating confirmation based on bench testing
 
 ---
 
 ## Conclusion
-This document establishes a clear, DBF-compliant wiring architecture that
-prioritizes safety, reliability, and noise isolation.
+This wiring architecture establishes a clear, DBF-compliant separation between
+propulsion and avionics power systems.
 
-By defining wiring principles before physical implementation, the risk of
-integration issues during assembly and testing is significantly reduced.
+Use of a removable XT90S arming plug provides a simple, reliable, and inspectable
+means of propulsion arming without additional switching hardware.
 
 ---
 

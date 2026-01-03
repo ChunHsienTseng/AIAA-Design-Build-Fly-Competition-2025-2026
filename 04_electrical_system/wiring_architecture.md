@@ -31,7 +31,7 @@ The electrical system consists of **two fully independent wiring architectures**
 This separation is mandatory for DBF compliance and system reliability.
 
 (Reference system block diagram:
-`01_system_architecture/figures/system_block_diagram.png`)
+`01_system_architecture/figures/system_block_diagram.jpg`)
 
 ---
 

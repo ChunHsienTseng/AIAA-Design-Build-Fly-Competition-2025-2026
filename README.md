@@ -93,3 +93,5 @@ This approach mirrors real-world aerospace and systems engineering workflows.
 ## Notes
 This repository focuses on **engineering methodology and decision-making** rather than proprietary team CAD or sensitive competition details.  
 All data shown is intended for educational and professional portfolio purposes.
+
+![System Block Diagram](01_system_architecture/figures/system_block_diagram.jpg)

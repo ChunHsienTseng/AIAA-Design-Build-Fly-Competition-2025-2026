@@ -57,7 +57,7 @@ Propulsion power is physically armed and disarmed via a removable XT90S anti-spa
 A high-level system block diagram and interface definitions are provided in the `01_system_architecture/` directory.
 
 ### System Block Diagram
-![System Block Diagram](01_system_architecture/figures/system_block_diagram.jpg)
+![System Block Diagram](01_system_architecture/figures/system_block_diagram_0103.jpg)
 
 ---
 

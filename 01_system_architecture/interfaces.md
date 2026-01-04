@@ -12,7 +12,7 @@ Clear interface definition ensures:
 - Alignment between system architecture, wiring, and safety procedures
 
 This document complements the system block diagram located at:
-`01_system_architecture/figures/system_block_diagram_01003.jpg`
+`01_system_architecture/figures/system_block_diagram_0103.jpg`
 
 ---
 

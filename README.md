@@ -52,12 +52,12 @@ The aircraft is treated as an integrated system consisting of:
 - Manufacturing and assembly processes
 - Ground and flight test validation
 
-Propulsion power is physically armed and disarmed via a removable XT90S anti-spark arming plug.
-
 A high-level system block diagram and interface definitions are provided in the `01_system_architecture/` directory.
 
 ### System Block Diagram
 ![System Block Diagram](01_system_architecture/figures/system_block_diagram_0103.jpg)
+
+Propulsion power is physically armed and disarmed via a removable XT90S anti-spark arming plug.
 
 ---
 

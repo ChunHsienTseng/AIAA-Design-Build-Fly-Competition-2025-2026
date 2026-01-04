@@ -2,15 +2,17 @@
 
 ## Purpose
 This document defines the **key system interfaces** between major aircraft
-subsystems, with emphasis on electrical, mechanical, and control boundaries.
+subsystems, with emphasis on electrical, mechanical, control, and operational
+boundaries.
 
 Clear interface definition ensures:
 - Consistent integration between subsystems
 - Reduced ambiguity during manufacturing and assembly
 - Predictable behavior during ground and flight testing
+- Alignment between system architecture, wiring, and safety procedures
 
 This document complements the system block diagram located at:
-`01_system_architecture/figures/system_block_diagram.png`
+`01_system_architecture/figures/system_block_diagram_01003.jpg`
 
 ---
 
@@ -33,30 +35,43 @@ described below.
 
 | Interface ID | Subsystem A | Subsystem B | Interface Type |
 |-------------|------------|-------------|----------------|
-| IF-01 | Propulsion Battery | ESC | Electrical (Power) |
-| IF-02 | ESC | Motor | Electrical (Power) |
-| IF-03 | Receiver Battery | Receiver | Electrical (Power) |
-| IF-04 | Receiver | Servos | Electrical (Control & Power) |
-| IF-05 | Receiver | ESC | Electrical (Control Signal) |
-| IF-06 | Airframe | Landing Gear | Mechanical |
-| IF-07 | Pilot | Arming / Safety Switch | Operational |
+| IF-01 | Propulsion Battery | XT90S Arming Plug | Electrical (Power) |
+| IF-02 | XT90S Arming Plug | ESC | Electrical (Power) |
+| IF-03 | ESC | Motor | Electrical (Power) |
+| IF-04 | Receiver Battery | Receiver | Electrical (Power) |
+| IF-05 | Receiver | Servos | Electrical (Control & Power) |
+| IF-06 | Receiver | ESC | Electrical (Control Signal) |
+| IF-07 | Airframe | Landing Gear | Mechanical |
+| IF-08 | Pilot | XT90S Arming Plug | Operational / Safety |
 
 ---
 
 ## Detailed Interface Definitions
 
-### IF-01: Propulsion Battery → ESC
+### IF-01: Propulsion Battery → XT90S Arming Plug
 - **Type:** Electrical power
 - **Voltage:** ~18.5 V nominal (5S)
-- **Current:** Up to 100 A (fuse-limited)
+- **Current:** Up to DBF propulsion current limit
 - **Notes:**
-  - Main propulsion power path
-  - Routed through arming/safety device
-  - Wiring and connectors must be rated for peak current
+  - Main propulsion power feed
+  - Routed through main fuse
+  - Fixed wiring; not routinely disconnected
+  - Connectors and wiring rated for peak current and thermal margin
 
 ---
 
-### IF-02: ESC → Motor
+### IF-02: XT90S Arming Plug → ESC
+- **Type:** Electrical power
+- **Voltage:** ~18.5 V nominal (5S)
+- **Current:** Up to DBF propulsion current limit
+- **Notes:**
+  - Primary physical arming/disarming interface
+  - Removable jumper provides visible safety state
+  - Anti-spark feature reduces connector wear and inrush stress
+
+---
+
+### IF-03: ESC → Motor
 - **Type:** Electrical power (three-phase)
 - **Voltage:** PWM-controlled three-phase output
 - **Current:** Up to ESC rating
@@ -66,52 +81,53 @@ described below.
 
 ---
 
-### IF-03: Receiver Battery → Receiver
+### IF-04: Receiver Battery → Receiver
 - **Type:** Electrical power
-- **Voltage:** 4.8–6.0 V (regulated or nominal)
+- **Voltage:** 4.8–6.0 V (nominal or regulated)
 - **Current:** Dependent on servo loading
 - **Notes:**
   - Dedicated avionics power source
   - Independent from propulsion battery
-  - Required for DBF compliance
+  - Required for DBF compliance and control reliability
 
 ---
 
-### IF-04: Receiver → Servos
-- **Type:** Electrical power + control signal
+### IF-05: Receiver → Servos
+- **Type:** Electrical power and control
 - **Signal:** PWM
 - **Voltage:** Matches receiver battery output
 - **Notes:**
   - Multiple servos may draw transient stall currents
-  - Wiring must avoid voltage drop and brownout
+  - Wiring must minimize voltage drop to prevent brownout
 
 ---
 
-### IF-05: Receiver → ESC
+### IF-06: Receiver → ESC
 - **Type:** Control signal
 - **Signal:** PWM throttle command
 - **Voltage:** Signal-level only (no power transfer)
 - **Notes:**
-  - ESC BEC is disabled and not used
-  - Throttle failsafe behavior must be configured
+  - ESC internal BEC is disabled and not used
+  - Throttle failsafe behavior must be configured and verified
 
 ---
 
-### IF-06: Airframe → Landing Gear
+### IF-07: Airframe → Landing Gear
 - **Type:** Mechanical
-- **Loads:** Static ground load, dynamic takeoff/landing loads
+- **Loads:** Static ground load, dynamic takeoff and landing loads
 - **Notes:**
   - Landing gear geometry constrains propeller clearance
   - Interface fixed by CAD design
 
 ---
 
-### IF-07: Pilot → Arming / Safety Switch
+### IF-08: Pilot → XT90S Arming Plug
 - **Type:** Operational / Human interface
-- **Function:** Enable or disable propulsion power
+- **Function:** Physically arm or disarm propulsion system
 - **Notes:**
-  - Required for safe ground handling
-  - Must interrupt propulsion battery power path
+  - Plug insertion arms propulsion power
+  - Plug removal guarantees motor cannot rotate
+  - Used during ground handling, testing, and inspection
 
 ---
 
@@ -119,8 +135,9 @@ described below.
 The following principles apply to all interfaces:
 
 - Electrical power and control paths are clearly separated
-- Avionics and propulsion power systems remain independent
-- Interfaces are documented before wiring or protection design
+- Propulsion and avionics power systems remain independent
+- Safety-critical interfaces are physically inspectable
+- Interfaces are documented and frozen prior to detailed wiring and protection design
 - Any interface change requires documentation update
 
 ---
@@ -128,11 +145,11 @@ The following principles apply to all interfaces:
 ## Relation to Downstream Design
 This interface definition informs:
 - Electrical wiring architecture
-- Fuse and protection placement
-- Assembly and pre-flight inspection procedures
-- Test and validation planning
+- Protection and fusing strategy
+- Assembly and ground safety procedures
+- Bench and flight test planning
 
-Subsequent documents include:
+Related documents include:
 - `04_electrical_system/wiring_architecture.md`
 - `04_electrical_system/protection_and_fusing.md`
 
@@ -140,10 +157,10 @@ Subsequent documents include:
 
 ## Conclusion
 Clear definition of system interfaces establishes a stable foundation
-for detailed electrical integration, manufacturing, and testing.
+for detailed electrical integration, manufacturing, and validation.
 
-By freezing interfaces early, downstream design changes can be
-controlled and evaluated systematically.
+By freezing interfaces at the concept stage, downstream design changes
+can be evaluated systematically and safely.
 
 ---
 
